@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from part_b.plotting import save_axes_centered
+from plotting import save_axes_centered
 
 df = pd.read_csv("data/real_estate_valuation.csv")
 

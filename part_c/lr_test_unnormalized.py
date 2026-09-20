@@ -7,10 +7,14 @@ from plotting import save_axes_centered
 df = pd.read_csv("data/real_estate_valuation.csv")
 
 y = df["Y house price of unit area"].to_numpy()
-x1 = df["X2 house age"].to_numpy()
-x2 = df["X3 distance to the nearest MRT station"].to_numpy()
+x1 = df["X1 transaction date"].to_numpy()
+x2 = df["X2 house age"].to_numpy()
+x3 = df["X3 distance to the nearest MRT station"].to_numpy()
+x4 = df["X4 number of convenience stores"].to_numpy()
+x5 = df["X5 latitude"].to_numpy()
+x6 = df["X6 longitude"].to_numpy()
 
-x = np.column_stack([np.ones_like(x1), x1, x2])  
+x = np.column_stack([np.ones_like(x1), x1, x2, x3, x4, x5, x6])  
 w = np.zeros(x.shape[1])                       
 
 N = len(y)  # Number of data samples

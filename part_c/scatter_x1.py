@@ -14,7 +14,9 @@ x4 = df["X4 number of convenience stores"].to_numpy()
 x5 = df["X5 latitude"].to_numpy()
 x6 = df["X6 longitude"].to_numpy()
 
+x = np.column_stack([np.ones_like(x1), x1, x2, x3, x4, x5, x6])
 z = np.column_stack([x1, x2, x3, x4, x5, x6])
+
 mean = z.mean(axis=0)
 std_dev = z.std(axis=0)
 
@@ -51,22 +53,20 @@ w = np.zeros_like(w_norm)
 w[0] = w_norm[0] - np.sum(w_norm[1:] * mean / std_dev)
 w[1:] = w_norm[1:] / std_dev
 
-print(f"w_norm: {w_norm}")
-print(f"w: {w}")
-print(f"Final loss: {loss[-1]}")
+y_predicted = x @ w
 
+"""Plotting"""
 fig, ax = plt.subplots(figsize=(6.5, 4.2))
 
-ax.plot(epochs, loss, label=f'lr = {alpha}')
+ax.scatter(x1, y, label='True', color='black')
+ax.scatter(x1, y_predicted, label='Predicted', color='dodgerblue')
 
-ax.set_xlabel(r'Epoch')
-ax.set_ylabel(r'Loss')
-ax.set_xlim(0, epochs.max())
-
-ax.set_yscale('log')
+ax.set_xlabel(r'Transaction Date')
+ax.set_ylabel(r'House Price per Unit Area')
+ax.set_xlim(x1.min(), x1.max())
 
 ax.grid(True, alpha=0.3, linewidth=0.6)
 ax.legend(handlelength=2.2, labelspacing=0.35, borderaxespad=0.2)
-save_axes_centered(fig, ax, f"lr-multi-norm.pdf")    
+save_axes_centered(fig, ax, f"norm_multi-transaction-date-scatter.pdf")    
 
 plt.show()

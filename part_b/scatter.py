@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from plotting import save_axes_centered
 
 df = pd.read_csv("data/real_estate_valuation.csv")
-
+print(df.head())
 x, y = df["X2 house age"].to_numpy(), df["Y house price of unit area"].to_numpy()
 N = len(x) # Number of data samples
 lr = 0.002
@@ -29,6 +29,8 @@ y_predicted = w0 + w1 * x
 Ln = y - y_predicted
 loss = (1 / N) * np.sum(Ln**2)
 print(f"Final loss: {loss}")
+
+"""Plotting"""
 fig, ax = plt.subplots(figsize=(6.5, 4.2))
 
 ax.scatter(x, y, label='True', color='black')
