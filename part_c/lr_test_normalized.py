@@ -1,0 +1,59 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from plotting import save_axes_centered
+
+df = pd.read_csv("data/real_estate_valuation.csv")
+
+y = df["Y house price of unit area"].to_numpy()
+x1 = df["X2 house age"].to_numpy()
+x2 = df["X3 distance to the nearest MRT station"].to_numpy()
+
+z = np.column_stack([x1, x2])
+mean_vec = z.mean(axis=0)
+std_dev_vec = z.std(axis=0)
+
+z_norm = (z - mean_vec) / std_dev_vec
+
+x = np.column_stack([np.ones_like(x1), z_norm])  
+w = np.zeros(x.shape[1])                       
+
+N = len(y)  # Number of data samples
+alpha = 1e-2 # Learning rate
+
+"""
+Index x-vector like:
+
+x[:,0][1] refers to 2nd element of 1-vector
+x[:,1][5] refers to 6th element of x1
+x[:,2][3] refers to 4th element of x2
+"""
+
+epochs = np.arange(0,300)
+loss = np.zeros(len(epochs))
+
+for i in range(len(epochs)):
+    y_hat = x @ w
+    Ln = y - y_hat    
+                           
+    loss[i] = (1 / N) * np.sum(Ln**2)   # Loss function
+
+    dL = -(2 / N) * (x.T @ Ln)          # Gradient of loss function
+    w -= alpha * dL                     # Gradient descent     
+
+fig, ax = plt.subplots(figsize=(6.5, 4.2))
+
+ax.plot(epochs, loss, label=f'lr = {alpha}')
+
+ax.set_xlabel(r'Epoch')
+ax.set_ylabel(r'Loss')
+ax.set_xlim(0, epochs.max())
+
+ax.set_yscale('log')
+
+ax.grid(True, alpha=0.3, linewidth=0.6)
+ax.legend(handlelength=2.2, labelspacing=0.35, borderaxespad=0.2)
+save_axes_centered(fig, ax, f"lr-multi-norm.pdf")    
+
+plt.show()
